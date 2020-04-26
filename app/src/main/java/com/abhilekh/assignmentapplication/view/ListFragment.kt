@@ -1,16 +1,15 @@
 package com.abhilekh.assignmentapplication.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.abhilekh.assignmentapplication.R
-import com.abhilekh.assignmentapplication.model.Animal
 import com.abhilekh.assignmentapplication.model.Hit
 import com.abhilekh.assignmentapplication.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragmant_list.*
@@ -55,14 +54,15 @@ class ListFragment : Fragment() {
         viewModel.animals.observe(this, animalListDataObserver)
         viewModel.loadError.observe(this, errorDataObserver)
         viewModel.loading.observe(this, loadingDataObserver)
-
-        viewModel.refresh()
+        Log.d("mvvm", "fragment-> fragment Created")
+        // viewModel.refresh()
         animalList.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = listAdapter
         }
 
         refreshLayout.setOnRefreshListener {
+            Log.d("mvvm", "fragment-> swiped down for refresh")
             animalList.visibility = View.GONE
             loadingView.visibility = View.VISIBLE
             loadError.visibility = View.GONE

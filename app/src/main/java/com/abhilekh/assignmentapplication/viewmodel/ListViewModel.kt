@@ -1,6 +1,7 @@
 package com.abhilekh.assignmentapplication.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.abhilekh.assignmentapplication.model.AnimalApiService
@@ -23,12 +24,20 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     private val apiService = AnimalApiService()
 
     fun refresh() {
+        Log.d("mvvm","viewmodel-> refresh")
+        loading.value = true
+        getAnimals()
+    }
+
+    init {
+        Log.d("mvvm","viewmodel-> init")
         loading.value = true
         getAnimals()
     }
 
 
     private fun getAnimals() {
+        Log.d("mvvm","viewmodel-> api called")
         getSingleObserver()?.let {
             apiService.getAnimals()
                 .subscribeOn(Schedulers.io())
