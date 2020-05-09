@@ -3,10 +3,12 @@ package com.abhilekh.assignmentapplication.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.abhilekh.assignmentapplication.model.AnimalApiService
 import com.abhilekh.assignmentapplication.model.ApiResponse
 import com.abhilekh.assignmentapplication.model.Hit
+import com.mindorks.framework.mvvm.utils.Resource
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -15,31 +17,28 @@ import io.reactivex.schedulers.Schedulers
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    //lazy:- Create only when needed
-    val animals by lazy { MutableLiveData<List<Hit>>() }
-    val loadError by lazy { MutableLiveData<Boolean>() }
-    val loading by lazy { MutableLiveData<Boolean>() }
 
+    private val animals = MutableLiveData<Resource<List<Hit>>>()
     private val disposable = CompositeDisposable()
     private val apiService = AnimalApiService()
 
     fun refresh() {
         Log.d("mvvm","viewmodel-> refresh")
-        loading.value = true
-        getAnimals()
+        animals.postValue(Resource.loading(null))
+        fetchAnimals()
     }
 
     init {
         Log.d("mvvm","viewmodel-> init")
-        loading.value = true
-        getAnimals()
+        animals.postValue(Resource.loading(null))
+        fetchAnimals()
     }
 
 
-    private fun getAnimals() {
+    private fun  fetchAnimals() {
         Log.d("mvvm","viewmodel-> api called")
         getSingleObserver()?.let {
-            apiService.getAnimals()
+            apiService. fetchAnimals()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(it)
@@ -53,16 +52,12 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onSuccess(value: ApiResponse) {
-                animals.value = value.hits
-                loadError.value = false
-                loading.value = false
+                animals.postValue(Resource.success(value.hits))
             }
 
             override fun onError(e: Throwable) {
-                Thread.sleep(5000)
-                animals.value = null
-                loadError.value = true
-                loading.value = false
+                Thread.sleep(2000)
+                animals.postValue(Resource.error("Something went wrong!",null))
             }
         }
     }
@@ -72,6 +67,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
         if (!disposable.isDisposed)
             disposable.dispose()
+    }
+
+
+    fun getAnimals(): LiveData<Resource<List<Hit>>> {
+        return animals
     }
 }
 

@@ -17,7 +17,7 @@ class AnimalApiService {
         .build().create(AnimalApi::class.java)
 
 
-    fun getAnimals(): Single<ApiResponse> {
+    fun  fetchAnimals(): Single<ApiResponse> {
         return api.getAnimals()
     }
 }
