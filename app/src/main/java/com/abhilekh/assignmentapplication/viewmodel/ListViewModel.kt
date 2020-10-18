@@ -32,6 +32,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("mvvm","viewmodel-> init")
         animals.postValue(Resource.loading(null))
         fetchAnimals()
+        Log.d("Krishna","added log")
     }
 
 
