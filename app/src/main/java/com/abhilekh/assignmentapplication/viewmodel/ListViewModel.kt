@@ -69,7 +69,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
             disposable.dispose()
     }
 
-
+    // method to get list
     fun getAnimals(): LiveData<Resource<List<Hit>>> {
         return animals
     }
