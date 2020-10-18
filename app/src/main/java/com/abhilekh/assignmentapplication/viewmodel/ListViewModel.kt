@@ -27,6 +27,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         animals.postValue(Resource.loading(null))
 
         println("")
+        Log.d("mvvm","viewmodel-> refresh")
+
         fetchAnimals()
     }
 
