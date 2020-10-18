@@ -23,8 +23,13 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     private val apiService = AnimalApiService()
 
     fun refresh() {
+
         Log.d("mvvm","viewmodel-> refresh")
         animals.postValue(Resource.loading(null))
+
+        println("")
+        Log.d("mvvm","viewmodel-> refresh")
+
         fetchAnimals()
     }
 
